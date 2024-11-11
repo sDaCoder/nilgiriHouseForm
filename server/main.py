@@ -1,27 +1,28 @@
-# Code for Backend
-# Packages installed -> FastAPI and uvicorn
-
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
+from fastapi import FastAPI, Request
+import uvicorn
+from models.feedback import Feedback
 
 app = FastAPI()
 
-@app.get("/")
-def root():
+def greet():
     return {"message": "Hello World"}
 
-@app.post("/item")
-async def get_items(I: Item):
-    dic = {"message": "Success", **I.dict()}
+def postFeedback(item: Feedback):
+    dic = {
+        "status": "Success",
+        "message": "Feedback is successfully posted",
+        "feedback": item.dict()
+    }
     print(dic)
     return dic
 
-@app.get("/{name}")
-def hello(name: str):
-    return {"message": f"Hello {name}"}
+@app.api_route("/", methods=["GET", "POST"])
+def root(req: Request, item: Feedback):
+    if req.method == 'GET':
+        greet()
+
+    elif req.method == 'POST':
+        postFeedback(item)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="localhost", port=80, reload=True)
