@@ -7,11 +7,17 @@
 </head>
 <body>
     <h2>This is a form for the submission of the files</h2>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <label for="file">Choosen file will be saved on server :</label>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <label for="file">Choosen file will be saved on server: </label>
         <input type="file" id="file" name="file" accept=".txt, .pdf, .jpg" multiple>
         <br>
         <input type="submit" value="Upload">
     </form>
+
+    {% if filename or location %}
+        <p>
+            {{ filename }} saved at {{ location }}
+        </p>
+    {% endif %}
 </body>
 </html>
